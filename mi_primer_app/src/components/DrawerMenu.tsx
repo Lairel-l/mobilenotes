@@ -1,5 +1,9 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet} from "react-native";
 import { DrawerContentScrollView, DrawerContentComponentProps } from "@react-navigation/drawer";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+//import { BtnTouch } from "./BtnTouch";
+
 
 interface BtnProps {
   action: () => void;
@@ -25,6 +29,8 @@ const BtnMenu = ( { action, text }:BtnProps ) => {
 }
 
 export const DrawerMenu = ( { navigation }: DrawerContentComponentProps ) => {
+
+    const { logout } = useContext( AuthContext ); //authState
 
   return (
     <DrawerContentScrollView>
@@ -76,6 +82,33 @@ export const DrawerMenu = ( { navigation }: DrawerContentComponentProps ) => {
         <BtnMenu
             text="Gestion de Usuarios"
             action={ () => navigation.navigate('UserStackNavigator')}
+        />
+        <BtnMenu
+            text="Tareas"
+            action={ () => navigation.navigate('Tareas')}
+        />
+        <BtnMenu
+            text="Login"
+            action={ () => navigation.navigate('UserStackNavigator')}
+        />
+        <BtnMenu
+            text="Libros"
+            action={ () => navigation.navigate('Libros')}
+        />
+
+        <BtnMenu
+          text="Dashboard"
+          action={ () => navigation.navigate('DataResponseScreen') }
+        />
+
+        <BtnMenu
+            text="Productos"
+            action={ () => navigation.navigate('ProductoScreen') }
+        />
+        
+        <BtnMenu
+            text="Cerrar sesión"
+            action={logout}
         />
         </View>
       </View>

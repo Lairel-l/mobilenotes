@@ -8,6 +8,9 @@ import { TareasModule } from './tareas/tareas.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity.js';
 import { UsersModule } from './users/users.module.js';
+import { LibrosModule } from './libros/libros.module.js';
+import { Libro } from './libros/entities/libro.entity.js';
+import {ProductoModule} from './producto/producto.module.js';
 
 @Module({
   imports: [
@@ -19,7 +22,7 @@ import { UsersModule } from './users/users.module.js';
       password: 'ConfiguracionSegura2026!',
       username: 'sa',
       database: 'sqldsm42',
-      entities: [ Tarea ],
+      entities: [ Tarea, ProductoModule ],
       synchronize: true,
       autoLoadEntities: true,
       options: {
@@ -29,7 +32,7 @@ import { UsersModule } from './users/users.module.js';
     TypeOrmModule.forRoot({
       autoLoadEntities: true,
       database: 'postdsm42',
-      entities: [ User ],
+      entities: [ User,Libro ],
       host: 'localhost',
       name: 'postgres-connection',
       password: 'admin',
@@ -52,7 +55,9 @@ import { UsersModule } from './users/users.module.js';
     }),
     UsersModule,
     SensorsModule,
-    TareasModule
+    TareasModule,
+    LibrosModule,
+    ProductoModule
   ],
   controllers: [AppController],
   providers: [AppService],
