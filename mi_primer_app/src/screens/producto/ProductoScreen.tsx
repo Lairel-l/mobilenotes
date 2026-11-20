@@ -1,7 +1,8 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, RefreshControl, useWindowDimensions } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, RefreshControl, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { pandoraApi } from '../../api/pandoraApi';
 import { BarChart, PieChart } from 'react-native-gifted-charts';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 const C = {
   fondo: '#fdfbf7',
@@ -18,6 +19,7 @@ const C = {
 };
 
 export const ProductoScreen = () => {
+  const navigation = useNavigation();
   const { width } = useWindowDimensions();
   const [total, setTotal] = useState<number>(0);
   const [abarrotes, setAbarrotes] = useState<any[]>([]);
@@ -111,7 +113,11 @@ export const ProductoScreen = () => {
   return (
     <ScrollView 
         style={style.pantalla} 
-        contentContainerStyle={{ flexGrow: 1, padding: 20 }}
+        contentContainerStyle={{ 
+            flexGrow: 1, 
+            padding: 20,
+            paddingTop: 100,
+        }}
         refreshControl={
             <RefreshControl
                 refreshing={isLoading}
@@ -122,6 +128,32 @@ export const ProductoScreen = () => {
             />
         }
     >
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+          top: 90,
+          right: 20,
+          zIndex: 10,
+          backgroundColor: 'rgba(0,0,0,0.3)',
+          padding: 12,
+          borderRadius: 10,
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.3,
+        }}
+        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+      >
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 24,
+          }}
+        >
+          ☰
+        </Text>
+      </TouchableOpacity>
       <Text style={style.header}>Monitor de Productos</Text>
       <Text style={style.total}>{total} registrados</Text>
 

@@ -1,30 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { pandoraApi } from "../api/pandoraApi";
+import { AuthContext } from "../context/AuthContext";
 import { DataResponse } from "../interfaces/pandoraApiRest";
 
-interface UseDataResponse{
+interface UseDataResponse {
   data: DataResponse | undefined;
   isLoading: boolean;
-  loadData: () => void;
+  loadData: () => Promise<void>;
 }
 
 export const useDataResponse = (): UseDataResponse => {
-
+  const { authState } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [ data, setData ] = useState<DataResponse>();
-  const urlApi = "http://192.168.143.172:3000/sensors/consultas/data";
+  const [data, setData] = useState<DataResponse>();
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
-    const response = await pandoraApi.get<DataResponse>( urlApi );
-    setData( response.data );
-    setIsLoading(false);
-  }
+    try {
+      const urlApi = `http://${authState.ip}:3000/sensors/consultas/data`;
+      const response = await pandoraApi.get<DataResponse>(urlApi);
+      setData(response.data);
+    } catch (error) {
+      console.log("Error al cargar datos del sensor:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [authState.ip]);
 
-  useEffect( () => {
+  useEffect(() => {
     loadData();
-  },[]);
+  }, [loadData]);
 
   return { isLoading, data, loadData };
-   
-}
+};

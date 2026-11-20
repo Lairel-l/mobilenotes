@@ -14,23 +14,25 @@ export const FormLibro = ( { navigation, route }: Props ) => {
   const { state, handleInputChange, handleSubmit } = useFormLibro();
   const { image64, pickImage } = useImagePicker();
 
-    useEffect( () => {
-      const libro = route.params;
-      handleInputChange("id", libro.id);
-      handleInputChange("titulo", libro.titulo);
-      handleInputChange("autor", libro.autor);
-      handleInputChange("isbn", libro.isbn);
-      handleInputChange("editorial", libro.editorial);
-      handleInputChange("ano", libro.ano.toString());
-      handleInputChange("genero", libro.genero);
-      handleInputChange("idioma", libro.idioma);
-      handleInputChange("numeroPaginas", libro.numeroPaginas.toString());
-      handleInputChange("ubicacion", libro.ubicacion);
-      handleInputChange("imagen1", libro.imagen1);
-      handleInputChange("imagen2", libro.imagen2);
-      handleInputChange("imagen3", libro.imagen3);
-    },[]);
-  
+  useEffect(() => {
+    const libro = route.params;
+    if (!libro) return;
+
+    handleInputChange("id", libro.id ?? 0);
+    handleInputChange("titulo", libro.titulo ?? "");
+    handleInputChange("autor", libro.autor ?? "");
+    handleInputChange("isbn", libro.isbn ?? "");
+    handleInputChange("editorial", libro.editorial ?? "");
+    handleInputChange("ano", libro.ano != null ? String(libro.ano) : "");
+    handleInputChange("genero", libro.genero ?? "");
+    handleInputChange("idioma", libro.idioma ?? "");
+    handleInputChange("numeroPaginas", libro.numeroPaginas != null ? String(libro.numeroPaginas) : "");
+    handleInputChange("ubicacion", libro.ubicacion ?? "");
+    handleInputChange("imagen1", libro.imagen1 ?? "");
+    handleInputChange("imagen2", libro.imagen2 ?? "");
+    handleInputChange("imagen3", libro.imagen3 ?? "");
+  }, []);    
+
     useEffect( () => {
     if ( image64 !== null ) {
       handleInputChange('imagen1', image64);
@@ -38,7 +40,15 @@ export const FormLibro = ( { navigation, route }: Props ) => {
   }, [image64]);
   
   return (
-    <ScrollView style={ appTheme.container }>
+    <ScrollView 
+        style={{flex: 1, backgroundColor: '#F7F8EE'}}
+        contentContainerStyle={{
+            flexGrow: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: 20,
+        }}
+    >
       <Text style={ appTheme.text }>Registro de Libros</Text>
       
       <Fab

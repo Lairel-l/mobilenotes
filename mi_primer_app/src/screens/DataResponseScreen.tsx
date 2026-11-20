@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import { View, Text, ScrollView, StyleSheet, useWindowDimensions, RefreshControl} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, useWindowDimensions, RefreshControl } from 'react-native';
 import { useDataResponse } from '../hooks/useDataResponse';
 import { BarChart, LineChart } from 'react-native-gifted-charts';
 import { appTheme } from '../theme/appTheme';
+import { DrawerButton } from '../components/DrawerButton';
 
 const C = {
   fondo: '#fdfbf7',
@@ -27,16 +28,16 @@ export const DataResponseScreen = () => {
 
   const hora = (f: Fecha) => {
     const d = new Date(f);
-    return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-  }
+    return `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
+  };
 
   const dia = (f: Fecha) => {
     const d = new Date(f);
     return `${d.getDate()}/${d.getMonth() + 1}`;
-  }
+  };
 
   const estiloEjes = {
-    xAxisLabelTextStyle: { color: C.suave, fontSize: 10 }, 
+    xAxisLabelTextStyle: { color: C.suave, fontSize: 10 },
     yAxisTextStyle: { color: C.suave, fontSize: 10 },
     xAxisColor: C.borde,
     yAxisColor: C.borde,
@@ -51,46 +52,34 @@ export const DataResponseScreen = () => {
     children: ReactNode;
   }) => {
     return (
-      <View
-        style={ style.tarjeta }
-      >
-        <Text
-          style={[ style.titulo ,
-          { textAlign: 'center' }]}
-        >
-          { titulo }
+      <View style={style.tarjeta}>
+        <Text style={[style.titulo, { textAlign: 'center' }]}>
+          {titulo}
         </Text>
-        <Text
-          style={[ style.sub,
-          { textAlign: 'center'}]}
-        >
-          { subtitulo }
+        <Text style={[style.sub, { textAlign: 'center' }]}>
+          {subtitulo}
         </Text>
-        <View
-          style={{ marginTop: 16 }}
-        >
-          { children }
+        <View style={{ marginTop: 16 }}>
+          {children}
         </View>
       </View>
     );
-  }
+  };
 
   const Stat = ({ label, valor, color }: {
     label: string;
     valor: number;
     color: string;
   }) => {
-    return ( 
+    return (
       <View
         style={{
           ...style.stat,
           borderTopColor: color
         }}
       >
-        <Text
-          style={ style.sub }
-        >
-          { label }
+        <Text style={style.sub}>
+          {label}
         </Text>
         <Text
           style={{
@@ -98,14 +87,13 @@ export const DataResponseScreen = () => {
             backgroundColor: color
           }}
         >
-          { Number(valor).toFixed(1) } C
+          {Number(valor).toFixed(1)} C
         </Text>
       </View>
     );
-  }
+  };
 
   const GraficoLinea = ({ datos, color }: { datos: Punto[]; color: string }) => {
-
     const { width } = useWindowDimensions();
 
     return (
@@ -115,10 +103,10 @@ export const DataResponseScreen = () => {
         color={color}
         width={width - 122}
         adjustToWidth
-        curved              
-        areaChart           
-        thickness={3} 
-        startFillColor={color}      
+        curved
+        areaChart
+        thickness={3}
+        startFillColor={color}
         endFillColor={C.tarjeta}
         startOpacity={0.4}
         endOpacity={0.02}
@@ -128,22 +116,18 @@ export const DataResponseScreen = () => {
     );
   };
 
-  if(!data){
-    return( 
-      <View
-        style={ appTheme.container }
-      >
-        <Text
-          style={ appTheme.text }
-        >
+  if (!data) {
+    return (
+      <View style={appTheme.container}>
+        <DrawerButton />
+        <Text style={appTheme.text}>
           Cargando...
         </Text>
       </View>
     );
   }
 
-  const { total, estadistica }= data;
-    //console.log("Datos de estadística:", estadistica);
+  const { total, estadistica } = data;
 
   const temperatura = data.ultimasHoras.map(a => ({
     value: Number(a.temperatura_celcius),
@@ -164,7 +148,7 @@ export const DataResponseScreen = () => {
     value: Number(d.promedio),
     label: dia(d.dia),
   }));
-  
+
   const top = data.topTemperaturas.map((a: any, index) => ({
     value: Number(a.temperatura_celcius),
     label: `#${index + 1}`,
@@ -176,93 +160,96 @@ export const DataResponseScreen = () => {
     { value: data.anteayer.length, color: C.morado, label: 'Antier' },
   ];
 
-  return(
-    <ScrollView
-      scrollEnabled={ true }
-      style={ style.pantalla }
-      contentContainerStyle={{
-        flexGrow: 1,
-        padding: 20
-      }}
-      refreshControl={
-        <RefreshControl
-          refreshing={isLoading}
-          onRefresh={loadData}
-          tintColor={C.frio}
-          colors={[ C.frio ]}
-          progressBackgroundColor={ C.tarjeta }
-        />
-      }
-    >
-      <View>
-        <Text style={style.header}>Monitor del sensor</Text>
-        <Text style={style.sub}>{total} lecturas registradas</Text>
-      </View>
-
-      <View style={style.fila}>
-        <Stat label="Promedio" valor={estadistica.temp_promedio} color={C.verde} />
-        <Stat label="Mínima" valor={(estadistica as any).temp_minima} color={C.frio} />
-        <Stat label="Máxima" valor={estadistica.temp_maxima} color={C.calor} />
-      </View>
-
-      <Tarjeta titulo="Temperatura" subtitulo="Últimas 6 horas (°C)">
-        <GraficoLinea datos={temperatura} color={C.calor} />
-      </Tarjeta>
-
-      <Tarjeta
-        titulo="Distancia"
-        subtitulo={`Alertas · promedio ${Number(estadistica.dist_promedio).toFixed(1)} cm`}
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        scrollEnabled={true}
+        style={style.pantalla}
+        contentContainerStyle={{
+          flexGrow: 1,
+          padding: 20,
+          paddingTop: 55,
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={loadData}
+            tintColor={C.frio}
+            colors={[C.frio]}
+            progressBackgroundColor={C.tarjeta}
+          />
+        }
       >
-        <GraficoLinea datos={distancia} color={C.verde} />
-      </Tarjeta>
+        <View style={{ paddingRight: 65 }}>
+          <Text style={style.header}>Monitor del sensor</Text>
+          <Text style={style.sub}>{total} lecturas registradas</Text>
+        </View>
 
-      <Tarjeta 
-        titulo="Días Fríos" 
-        subtitulo="Promedio de temperatura por día"
-      >
-        <GraficoLinea datos={diasFrios} color={C.frio} />
-      </Tarjeta>
+        <View style={style.fila}>
+          <Stat label="Promedio" valor={estadistica.temp_promedio} color={C.verde} />
+          <Stat label="Mínima" valor={(estadistica as any).temp_minima} color={C.frio} />
+          <Stat label="Máxima" valor={estadistica.temp_maxima} color={C.calor} />
+        </View>
 
+        <Tarjeta titulo="Temperatura" subtitulo="Últimas 6 horas (°C)">
+          <GraficoLinea datos={temperatura} color={C.calor} />
+        </Tarjeta>
 
-      <Tarjeta 
-        titulo="Días Calurosos" 
-        subtitulo="Promedio de temperatura por día"
-      >
-        <GraficoLinea datos={diasCalurosos} color={C.calor} />
-      </Tarjeta>
+        <Tarjeta
+          titulo="Distancia"
+          subtitulo={`Alertas · promedio ${Number(estadistica.dist_promedio).toFixed(1)} cm`}
+        >
+          <GraficoLinea datos={distancia} color={C.verde} />
+        </Tarjeta>
 
-      <Tarjeta 
-        titulo="Top Temperaturas" 
-        subtitulo="Las más altas"
-      >
-        <BarChart
-          data={top}
-          width={width - 122}
-          height={200}
-          barWidth={50}
-          noOfSections={4}
-          frontColor={C.verde}
-          yAxisThickness={0}
-          xAxisThickness={0}
-          yAxisTextStyle={{ color: C.suave }}
-          xAxisLabelTextStyle={{ color: C.suave, fontSize: 10 }}
-          isAnimated
-        />
-      </Tarjeta>
+        <Tarjeta
+          titulo="Días Fríos"
+          subtitulo="Promedio de temperatura por día"
+        >
+          <GraficoLinea datos={diasFrios} color={C.frio} />
+        </Tarjeta>
 
-      <Tarjeta
-        titulo='Lecturas por día'
-        subtitulo='Comparasion de registros'
-      >
-        <GraficoLinea datos={lecturasPorDia} color={C.morado}/>
-      </Tarjeta>
+        <Tarjeta
+          titulo="Días Calurosos"
+          subtitulo="Promedio de temperatura por día"
+        >
+          <GraficoLinea datos={diasCalurosos} color={C.calor} />
+        </Tarjeta>
 
-    </ScrollView>
+        <Tarjeta
+          titulo="Top Temperaturas"
+          subtitulo="Las más altas"
+        >
+          <BarChart
+            data={top}
+            width={width - 122}
+            height={200}
+            barWidth={50}
+            noOfSections={4}
+            frontColor={C.verde}
+            yAxisThickness={0}
+            xAxisThickness={0}
+            yAxisTextStyle={{ color: C.suave }}
+            xAxisLabelTextStyle={{ color: C.suave, fontSize: 10 }}
+            isAnimated
+          />
+        </Tarjeta>
+
+        <Tarjeta
+          titulo='Lecturas por día'
+          subtitulo='Comparasion de registros'
+        >
+          <GraficoLinea datos={lecturasPorDia} color={C.morado} />
+        </Tarjeta>
+      </ScrollView>
+
+      <DrawerButton />
+    </View>
   );
-}
+};
 
 const style = StyleSheet.create({
-  pantalla: { flex:1, backgroundColor: C.fondo },
+  pantalla: { flex: 1, backgroundColor: C.fondo },
   centro: { justifyContent: 'center', alignItems: 'center' },
   header: { color: C.texto, fontSize: 13 },
   sub: { color: C.texto, fontSize: 26, fontWeight: "bold" },

@@ -14,6 +14,7 @@ import { LibroStackNavigator } from "./LibroStackNavigator";
 import { useContext } from "react";
 import { DataResponseScreen } from "../screens/DataResponseScreen";
 import { ProductoScreen } from "../screens/producto/ProductoScreen";
+import { IpScreen } from "../screens/IpScreen";
 
 export type RootDrawerParams = {
   NavClases:            undefined;  
@@ -27,6 +28,7 @@ export type RootDrawerParams = {
   LoginUser:            undefined;
   DataResponseScreen:   undefined;
   ProductoScreen:       undefined;
+  IpScreen:             undefined;
 }
 
 const Drawer = createDrawerNavigator<RootDrawerParams>();
@@ -40,7 +42,7 @@ const Navigator = () => {
     <Drawer.Navigator
       initialRouteName='NavClases'
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
               drawerType: width > 720 ? 'permanent': 'front',
         drawerPosition: 'right',//right
         overlayColor: 'rgba(204, 238, 161, 0.4)',
@@ -83,7 +85,6 @@ const Navigator = () => {
         name="Libros" 
         component={LibroStackNavigator} 
       />
-
       <Drawer.Screen
         name='DataResponseScreen'
         component={DataResponseScreen}
@@ -92,6 +93,11 @@ const Navigator = () => {
       <Drawer.Screen
         name='ProductoScreen'
         component={ProductoScreen}
+      />
+
+      <Drawer.Screen
+        name='IpScreen'
+        component={IpScreen}
       />
     </Drawer.Navigator>
   );

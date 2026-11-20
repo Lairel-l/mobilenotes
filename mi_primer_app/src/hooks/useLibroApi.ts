@@ -21,10 +21,10 @@ export interface LibroResponse {
 interface UseLibroApi {
   isLoading: boolean;
   listLibros: LibroResponse[];
-  loadLibros: () => void;
-  createLibro: ( data: FormLibroData ) => void;
-  updateLibro: ( data: FormLibroData ) => void;
-  deleteLibro: ( data: FormLibroData ) => void;
+  loadLibros: () => Promise<void>;
+  createLibro: ( data: FormLibroData ) => Promise<void>;
+  updateLibro: ( data: FormLibroData ) => Promise<void>;
+  deleteLibro: ( data: FormLibroData ) => Promise<void>;
 }
 
 export const useLibroApi = (): UseLibroApi => {
@@ -35,9 +35,14 @@ export const useLibroApi = (): UseLibroApi => {
 
   const loadLibros = async () => {
     setIsLoading(true);
-    const response = await pandoraApi.get<LibroResponse[]>( urlApi );
-    setListLibros( response.data );
-    setIsLoading(false);
+    try {
+      const response = await pandoraApi.get<LibroResponse[]>( urlApi );
+      setListLibros( response.data );
+    } catch (error) {
+      console.log("Error al cargar libros:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect( () => {
@@ -45,45 +50,57 @@ export const useLibroApi = (): UseLibroApi => {
   },[]);
 
   const createLibro = async ( data: FormLibroData ) => {
-    const dataBody = {
-      titulo: data.titulo,
-      autor: data.autor,
-      isbn: data.isbn,
-      editorial: data.editorial,
-      ano: parseInt(data.ano),
-      genero: data.genero,
-      idioma: data.idioma,
-      numeroPaginas: parseInt(data.numeroPaginas),
-      ubicacion: data.ubicacion,
-      imagen1: data.imagen1 !== '' ? data.imagen1 : 'sin-imagen.jpg',
-      imagen2: data.imagen2 !== '' ? data.imagen2 : 'sin-imagen.jpg',
-      imagen3: data.imagen3 !== '' ? data.imagen3 : 'sin-imagen.jpg',
-    }
+    try {
+      const dataBody = {
+        titulo: data.titulo,
+        autor: data.autor,
+        isbn: data.isbn,
+        editorial: data.editorial,
+        ano: parseInt(data.ano),
+        genero: data.genero,
+        idioma: data.idioma,
+        numeroPaginas: parseInt(data.numeroPaginas),
+        ubicacion: data.ubicacion,
+        imagen1: data.imagen1 !== '' ? data.imagen1 : 'sin-imagen.jpg',
+        imagen2: data.imagen2 !== '' ? data.imagen2 : 'sin-imagen.jpg',
+        imagen3: data.imagen3 !== '' ? data.imagen3 : 'sin-imagen.jpg',
+      }
 
-    await pandoraApi.post( urlApi, dataBody );
+      await pandoraApi.post( urlApi, dataBody );
+    } catch (error) {
+      console.log("Error al crear libro:", error);
+    }
   }
 
   const updateLibro = async ( data: FormLibroData ) => {
-    const dataBody = {
-      titulo: data.titulo,
-      autor: data.autor,
-      isbn: data.isbn,
-      editorial: data.editorial,
-      ano: parseInt(data.ano),
-      genero: data.genero,
-      idioma: data.idioma,
-      numeroPaginas: parseInt(data.numeroPaginas),
-      ubicacion: data.ubicacion,
-      imagen1: data.imagen1,
-      imagen2: data.imagen2,
-      imagen3: data.imagen3
-    }
+    try {
+      const dataBody = {
+        titulo: data.titulo,
+        autor: data.autor,
+        isbn: data.isbn,
+        editorial: data.editorial,
+        ano: parseInt(data.ano),
+        genero: data.genero,
+        idioma: data.idioma,
+        numeroPaginas: parseInt(data.numeroPaginas),
+        ubicacion: data.ubicacion,
+        imagen1: data.imagen1,
+        imagen2: data.imagen2,
+        imagen3: data.imagen3
+      }
 
-    await pandoraApi.patch( `${urlApi}/${data.id}`, dataBody );
+      await pandoraApi.patch( `${urlApi}/${data.id}`, dataBody );
+    } catch (error) {
+      console.log("Error al actualizar libro:", error);
+    }
   }
 
   const deleteLibro = async ( data: FormLibroData ) => {
-    await pandoraApi.delete( `${urlApi}/${data.id}`);
+    try {
+      await pandoraApi.delete( `${urlApi}/${data.id}`);
+    } catch (error) {
+      console.log("Error al eliminar libro:", error);
+    }
   }
 
   return { isLoading, listLibros, loadLibros, createLibro, updateLibro, deleteLibro };

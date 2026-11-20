@@ -39,7 +39,8 @@ export const HomeUSer = () => {
             style={{
               alignContent: "center",
               alignItems: "center",
-              justifyContent: 'center'
+              justifyContent: 'center',
+              paddingTop:180
             }}
           >
             <Text

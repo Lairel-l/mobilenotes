@@ -42,7 +42,7 @@ export const DrawerMenu = ( { navigation }: DrawerContentComponentProps ) => {
         >
           <Image
             style={ style.avatar }
-            source={{ uri: 'https://i.pinimg.com/736x/bf/b7/4e/bfb74e2d7c4e2580a3fbefe9af91d714.jpg' }}
+            source={require('../../assets/porfil_picture.jpg')}
           />
         </View>
         <Text
@@ -84,10 +84,6 @@ export const DrawerMenu = ( { navigation }: DrawerContentComponentProps ) => {
             action={ () => navigation.navigate('UserStackNavigator')}
         />
         <BtnMenu
-            text="Tareas"
-            action={ () => navigation.navigate('Tareas')}
-        />
-        <BtnMenu
             text="Login"
             action={ () => navigation.navigate('UserStackNavigator')}
         />
@@ -105,7 +101,10 @@ export const DrawerMenu = ( { navigation }: DrawerContentComponentProps ) => {
             text="Productos"
             action={ () => navigation.navigate('ProductoScreen') }
         />
-        
+        <BtnMenu
+            text="IpScreen"
+            action={ () => navigation.navigate('IpScreen') }
+        />
         <BtnMenu
             text="Cerrar sesión"
             action={logout}

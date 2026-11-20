@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "app_dsm42_2026",
+    "name": "laiapp_dsm42_2026",
     "slug": "dsm42",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +10,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.lairel.dsm42",
+      "package": "com.lairel.laiapp",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -69,11 +69,6 @@
         }
       ],
       "expo-status-bar"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "d5034b70-b5e8-4b84-b1ea-f8273701144a"
-      }
-    }
+    ]
   }
 }

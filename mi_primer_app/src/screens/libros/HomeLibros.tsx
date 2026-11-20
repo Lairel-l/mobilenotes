@@ -6,6 +6,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useLibroApi, LibroResponse } from '../../hooks/useLibroApi';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackLibroParams } from '../../navigator/LibroStackNavigator';
+import { DrawerButton } from '../../components/DrawerButton';
 
 export const HomeLibros = () => {
 
@@ -14,9 +15,16 @@ export const HomeLibros = () => {
   const navigation = useNavigation<StackNavigationProp<StackLibroParams>>();
   const focused = useIsFocused();
 
-  useEffect( () =>  {
-    loadLibros();
-  },[ focused ]);
+  useEffect(() => {
+    const cargar = async () => {
+      try {
+        await loadLibros();
+      } catch (error) {
+        console.log('Error cargando libros:', error);
+      }
+    };
+    cargar();
+  }, [focused]);
 
   const create: LibroResponse = {
     id: 0,
@@ -35,30 +43,32 @@ export const HomeLibros = () => {
   };
 
   return (
-    <View
-      style={ appTheme.container }
-    >
+    <View style={appTheme.container}>
+      <DrawerButton />
       <FlatList
-        data={ listLibros }
-        keyExtractor={ (item) => `#${item.id}` }
+        data={listLibros}
+        keyExtractor={(item) => `#${item.id}`}
+        contentContainerStyle={{
+          paddingTop: 55,
+          paddingBottom: 20,
+        }}
         ListHeaderComponent={(
           <View
             style={{
               alignContent: "center",
               alignItems: "center",
-              justifyContent: 'center'
+              justifyContent: 'center',
+              marginBottom: 10,
             }}
           >
-            <Text
-              style={ appTheme.text }
-            >
+            <Text style={appTheme.text}>
               Catálogo de Libros
             </Text>
             <BtnTouch
               title='Agregar Libro'
               color='pink'
               borderColor='violet'
-              onPress={ () => navigation.navigate('FormLibro', { ...create }) }
+              onPress={() => navigation.navigate('FormLibro', { ...create })}
             />
           </View>
         )}
@@ -66,13 +76,13 @@ export const HomeLibros = () => {
         numColumns={2}
         refreshControl={(
           <RefreshControl
-            refreshing={ isLoading }
-            onRefresh={ loadLibros }
-            colors={[ "pink", "violet", "black" ]}
+            refreshing={isLoading}
+            onRefresh={loadLibros}
+            colors={["pink", "violet", "black"]}
             progressBackgroundColor="black"
           />
         )}
-        renderItem={ ({ item }) => (
+        renderItem={({ item }) => (
           <View
             style={{
               flex: 1,
@@ -84,13 +94,12 @@ export const HomeLibros = () => {
               backgroundColor: 'white'
             }}
           >
-            <Text style={{ fontWeight: 'bold', color: 'black' }}>{ item.titulo }</Text>
-            <Text style={{ color: 'gray', fontSize: 12 }}>{ item.autor }</Text>
-            <Text style={{ color: 'gray', fontSize: 10 }}>Ubicación: { item.ubicacion }</Text>
+            <Text style={{ fontWeight: 'bold', color: 'black' }}>{item.titulo}</Text>
+            <Text style={{ color: 'gray', fontSize: 12 }}>{item.autor}</Text>
+            <Text style={{ color: 'gray', fontSize: 10 }}>Ubicación: {item.ubicacion}</Text>
           </View>
         )}
       />
     </View>
   );
-
-}
+};

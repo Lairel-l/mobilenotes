@@ -17,13 +17,16 @@ export const UseEffectScreen = ( ) => {
   useEffect( () => {
     const interval = setInterval( () => {
       setHora( new Date() );
-      return () => clearInterval( interval );
     }, 1000); 
 
     const intervalColor = setInterval( () => {
       random();
-      return () => clearInterval( intervalColor );
-    }, 2000); 
+    }, 2000);
+
+    return () => {
+        clearInterval(interval);
+        clearInterval(intervalColor);
+    };
   },[]);
 
   return(

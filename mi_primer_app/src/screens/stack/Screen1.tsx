@@ -79,7 +79,7 @@ export const Screen1 = ({ navigation }: Props) => {
       </Text>
       <Image
         style={ style.entrenador }
-        source={{ uri: 'https://i.pinimg.com/736x/6a/dd/3a/6add3a02c42a1e3085599c409fd8013e.jpg' }}
+        source={require('../../../assets/pokegirl.jpg')}
       />
       <Text style={{
         ...appTheme.text, 
